@@ -1,0 +1,25 @@
+#Data
+1. The dataset is a JSON array containing many EVA objects 
+1 (a). Each record represents an Extravehicular Activity which is any work done by astronauts during their space missions
+1 (b). eva, country, crew, vehicle, date, duration, purpose 
+2. Missing fields, null values, everything is a string, lists of crew are one string (not a list)
+2 (a) No, not all the records contain an eva, vehicle, purpose, duration or date field causing the data to be inconsistent 
+2 (b) ISO stlye date-time strings 
+2 (c) Hours and minutes
+2 (d) Some values such as duration are 0
+3. The code would need to handle missing values, converts string values into suitable data types, wouldn't be able to rely on eva values to count number of missions, can't directly count how many astronauts were part of the crew (would need to split crew string)
+
+#Code
+1. Processes the eva data and plots the data on a graph where X axis is the year and Y axis is the cumulative eva duration hours (i.e. shows the total number of hours ever spent on eva missions throughout the years)
+2. Line 5, the code starts by opening the data.json file 
+3. Reads the eva data from data.json file 
+4. It's read an assigned to eva_data, feeds the data to the program 
+5. A plot graph showing the cumulative eva duration hours over the years 
+6. eva_data provides all the data into the code, after cleaning up the data its stored in records variable. Other important variables are dates and cumulative_hours because they're directly used in the plot 
+7. EVA durations are converted by excluding null values, then splitting the value on the ":" and mapping the Int function to each value, then assigning the results to hours and minutes variables. Finally the values are added together, divided by 60 and assigned to duration_hours.
+8. Cumulative EVA time is calculated by continuously summing up the duration_hours into total_hours and then keep a list of all total_hours values in the cumulative_hours list (which is used for plotting data)
+9. The plotting depends on storing cumulative hours, storing cumulative hours depends on sorting records by date, sorting records depends on records processing, records processing depends on data reading.
+10. No
+11. Reading the file, plotting the graph
+12. Processing/parsing the data, creating cumulative hours
+13. Everything because every component depends on another component

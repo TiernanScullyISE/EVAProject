@@ -1,0 +1,16 @@
+GitHub: https://github.com/Dawijak04/EVAProject
+
+1. I think the code changes belong right after the first for loop where records list is made, a filter should be introduces which will create a new list and shorten down the size of the list which will make processing the new list faster later in the code. Hence, filter should be as soon as possible.
+2. I would need to remove data where country is a null value, all the processing logic can be reused and so can the remaining data with entries in the country field. The logic for creating cumulative data and plotting graphs would be used twice so I would need to put this into a function. 
+3. The first for loop that creates the records list is the only component that I would change however this would just be adding a filter, no major refactoring changes would need to be made.
+4. The file reading, record sorting would stay untouched, while cumulative hour calculating and graph plotting would be reused in a function. 
+5. If the filter doesn't work as expected and accidently filters out all the data, every component after the first for loop will not have any data to work on, hence the final output would be an empty graph. 
+
+
+1. I tried to keep changes to a minimum, so I would say I made the least amount of line changes necessary for the implementation of the requirement I had in mind. 
+2. Yes, the new variables and function that I added are named in a way that is understandable to new developers and explain the purpose of them. 
+3. No, I avoided duplication by reusing functionality such as cumulating total hours and plotting graphs 
+4. No, the only assumption would be that the data exists at eva-data.json however this assumption was removed when I implemented the requirement FR10: Multiple data files.
+5. Very confident because the initial graph is still produced and works as expected, my changes co-exist with this behaviour. 
+
+
