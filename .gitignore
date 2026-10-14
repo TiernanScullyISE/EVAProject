@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+.venv/
+.verification/
+cumulative_duration_*.png

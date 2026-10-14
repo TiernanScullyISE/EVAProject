@@ -1,0 +1,112 @@
+{
+  "source_commit": "1950d2425628794755584a2e67bd11b538517768",
+  "data_sha256": "dfb6adca4de4678fefec890c7e96b9dfd1e8a00083a3810e8cb22aeebd09e22f",
+  "raw_count": 375,
+  "runs": {
+    "Russia": {
+      "stdout": "\nEVA duration categories for all countries\n--------------------------------------\nShort (Less than 4 hours): 71(21.52%)\nStandard (4 to 7 hours): 187(56.67%)\nLong (More than 7 hours): 72(21.82%)\n",
+      "plots": [
+        {
+          "title": "Cumulative hours for all countries",
+          "xlabel": "Year",
+          "ylabel": "Cumulative EVA duration (hours)",
+          "series": [
+            {
+              "count": 330,
+              "total_hours": 1785.0333333333347,
+              "sha256": "e5313aaf399706d52caf690d772a2dbf4789d3da515d5b99e124f1359a3e01fa"
+            }
+          ]
+        },
+        {
+          "title": "Cumulative hours for Russia",
+          "xlabel": "Year",
+          "ylabel": "Cumulative EVA duration (hours)",
+          "series": [
+            {
+              "count": 330,
+              "total_hours": 1785.0333333333347,
+              "sha256": "e5313aaf399706d52caf690d772a2dbf4789d3da515d5b99e124f1359a3e01fa"
+            },
+            {
+              "count": 113,
+              "total_hours": 527.9000000000001,
+              "sha256": "2c9d646738259ad22a1f4364ba2572317ed0e4771fdae6d28c92fb5a3bb2874c"
+            }
+          ]
+        }
+      ],
+      "prepared_count": 330
+    },
+    "USA": {
+      "stdout": "\nEVA duration categories for all countries\n--------------------------------------\nShort (Less than 4 hours): 71(21.52%)\nStandard (4 to 7 hours): 187(56.67%)\nLong (More than 7 hours): 72(21.82%)\n",
+      "plots": [
+        {
+          "title": "Cumulative hours for all countries",
+          "xlabel": "Year",
+          "ylabel": "Cumulative EVA duration (hours)",
+          "series": [
+            {
+              "count": 330,
+              "total_hours": 1785.0333333333347,
+              "sha256": "e5313aaf399706d52caf690d772a2dbf4789d3da515d5b99e124f1359a3e01fa"
+            }
+          ]
+        },
+        {
+          "title": "Cumulative hours for USA",
+          "xlabel": "Year",
+          "ylabel": "Cumulative EVA duration (hours)",
+          "series": [
+            {
+              "count": 330,
+              "total_hours": 1785.0333333333347,
+              "sha256": "e5313aaf399706d52caf690d772a2dbf4789d3da515d5b99e124f1359a3e01fa"
+            },
+            {
+              "count": 217,
+              "total_hours": 1257.1333333333334,
+              "sha256": "b44371d2e39cf78ee90fd9c2dfea85efa5441ed7a57cb0660ff55dd052ff67ba"
+            }
+          ]
+        }
+      ],
+      "prepared_count": 330
+    },
+    "UNKNOWN": {
+      "stdout": "\nEVA duration categories for all countries\n--------------------------------------\nShort (Less than 4 hours): 71(21.52%)\nStandard (4 to 7 hours): 187(56.67%)\nLong (More than 7 hours): 72(21.82%)\n",
+      "plots": [
+        {
+          "title": "Cumulative hours for all countries",
+          "xlabel": "Year",
+          "ylabel": "Cumulative EVA duration (hours)",
+          "series": [
+            {
+              "count": 330,
+              "total_hours": 1785.0333333333347,
+              "sha256": "e5313aaf399706d52caf690d772a2dbf4789d3da515d5b99e124f1359a3e01fa"
+            }
+          ]
+        },
+        {
+          "title": "Cumulative hours for UNKNOWN",
+          "xlabel": "Year",
+          "ylabel": "Cumulative EVA duration (hours)",
+          "series": [
+            {
+              "count": 330,
+              "total_hours": 1785.0333333333347,
+              "sha256": "e5313aaf399706d52caf690d772a2dbf4789d3da515d5b99e124f1359a3e01fa"
+            },
+            {
+              "count": 0,
+              "total_hours": 0,
+              "sha256": "727bfa50a7b43f4513f837d61bcb3d4a62fb3598b30dc9f3eefcfcf08a8ffece"
+            }
+          ]
+        }
+      ],
+      "prepared_count": 330
+    }
+  }
+}

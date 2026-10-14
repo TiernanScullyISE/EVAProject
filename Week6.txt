@@ -1,0 +1,62 @@
+Week 6: EVA Application
+
+Activity 1: Understand the Inherited Code
+
+The inherited version was commit 1950d24. It had seven commits, which have been kept.
+evacodev2.py was the only Python module. It read JSON, prepared records, calculated results and displayed them.
+It asked for a data file and country, plotted cumulative EVA hours for all countries and the selected country, and printed duration categories.
+check_country used a global COUNTRY value. cumulate_hour_and_plot combined calculations with plotting, while report_eva_categories combined calculations with printing.
+Reading, preparation and execution were also mixed together. Plotting depended on prepared records, and preparation depended on the loaded JSON.
+Calculations were hard to test independently because importing the script started prompts and graphs.
+The application was run before restructuring. The supplied data had 375 rows and 330 usable records.
+Its category counts were 71 short, 187 standard and 72 long. These results were kept as a baseline.
+
+Activity 2: Propose an Improved Structure
+
+The existing script remains the entry point. Its work is split by responsibility:
+- evacodev2.py calls main() when the script is run.
+- eva/loading.py reads JSON through load_data(path).
+- eva/preparation.py validates, converts and sorts data through prepare_records(data).
+- eva/analysis.py contains country filtering, cumulative hours, categories and comparison calculations.
+- eva/presentation.py displays reports and graphs using supplied results.
+- eva/application.py handles input and coordinates the other modules.
+
+prepare_records returns EVARecord values containing a date, duration in hours and country.
+Analysis accepts these records as arguments. cumulative_hours returns dates and running totals, while duration_categories returns category counts.
+compare_countries(records, country_a, country_b, start_year, end_year) returns both country summaries and the winner.
+Presentation receives calculated values through plot_cumulative, report_categories and report_comparison.
+Application passes data between these functions. The four responsibility modules do not import one another.
+This keeps related functions together. Analysis does not depend on file reading or display, and presentation does not read JSON.
+The old global-country coupling is replaced by explicit country and output-path arguments.
+
+Module dependencies (arrows mean "depends on"):
+evacodev2.py -> eva/application.py
+eva/application.py -> eva/loading.py
+eva/application.py -> eva/preparation.py
+eva/application.py -> eva/analysis.py
+eva/application.py -> eva/presentation.py
+
+ADR-001: Separate the application's main responsibilities
+
+1. Context: What problem are we addressing?
+Reading, preparation, calculations and output shared one script, making calculations hard to test separately.
+
+2. Alternatives: What approaches were considered?
+Keep one script, split it into modules, or introduce service classes and a framework.
+
+3. Decision: What approach was selected?
+Split the work into loading, preparation, analysis, presentation and application modules, keeping the original entry point.
+
+4. Rationale: Why was this approach selected?
+The modules match the application's jobs. Simple functions are enough and no new runtime dependency is needed.
+
+5. Consequences: What are the expected benefits, limitations and trade-offs?
+Responsibilities are easier to find and calculations can be tested independently. There are more files to navigate and the shared record format needs to stay consistent.
+
+Activity 3: Restructure the Code
+
+The structure above is implemented. Existing calculations were moved into analysis and their output into presentation.
+The original file selection, country graph, all-country graph and category report remain available.
+Record skipping, sorting, zero-duration handling and category thresholds are preserved.
+The original report and plotted values are checked by tests against the captured baseline.
+The restructuring has its own commit: Refactor EVA application into separate modules.
