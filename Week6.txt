@@ -1,35 +1,33 @@
 Week 6: EVA Application
 
 Activity 1: Understand the Inherited Code
-
-The inherited version was commit 1950d24. It had seven commits, which have been kept.
-evacodev2.py was the only Python module. It read JSON, prepared records, calculated results and displayed them.
-It asked for a data file and country, plotted cumulative EVA hours for all countries and the selected country, and printed duration categories.
-check_country used a global COUNTRY value. cumulate_hour_and_plot combined calculations with plotting, while report_eva_categories combined calculations with printing.
-Reading, preparation and execution were also mixed together. Plotting depended on prepared records, and preparation depended on the loaded JSON.
-Calculations were hard to test independently because importing the script started prompts and graphs.
-The application was run before restructuring. The supplied data had 375 rows and 330 usable records.
-Its category counts were 71 short, 187 standard and 72 long. These results were kept as a baseline.
+The inherited version was 1950d24. Its seven commits have been kept.
+evacodev2.py handled everything: file reading, data preparation, calculations, input and output.
+It asked for a file and country, plotted cumulative hours for all countries and that country, then printed duration categories.
+check_country used the global COUNTRY value. cumulate_hour_and_plot mixed calculations with plotting, and report_eva_categories mixed calculations with printing.
+The graphs needed prepared records, which needed the JSON data first.
+Importing the script started prompts and graphs, so calculations were hard to test on their own.
+The original application was run before changes. Its data had 375 rows and 330 usable records.
+The original category counts were 71 short, 187 standard and 72 long.
 
 Activity 2: Propose an Improved Structure
-
-The existing script remains the entry point. Its work is split by responsibility:
-- evacodev2.py calls main() when the script is run.
+The original script stays as the entry point. The modules are split by job:
+- evacodev2.py runs main().
 - eva/loading.py reads JSON through load_data(path).
-- eva/preparation.py validates, converts and sorts data through prepare_records(data).
-- eva/analysis.py contains country filtering, cumulative hours, categories and comparison calculations.
-- eva/presentation.py displays reports and graphs using supplied results.
-- eva/application.py handles input and coordinates the other modules.
+- eva/preparation.py checks, converts and sorts data through prepare_records(data).
+- eva/analysis.py handles filtering, cumulative hours, categories and country comparison.
+- eva/presentation.py displays reports and graphs.
+- eva/application.py handles input and connects the other modules.
 
-prepare_records returns EVARecord values containing a date, duration in hours and country.
-Analysis accepts these records as arguments. cumulative_hours returns dates and running totals, while duration_categories returns category counts.
-compare_countries(records, country_a, country_b, start_year, end_year) returns both country summaries and the winner.
-Presentation receives calculated values through plot_cumulative, report_categories and report_comparison.
-Application passes data between these functions. The four responsibility modules do not import one another.
-This keeps related functions together. Analysis does not depend on file reading or display, and presentation does not read JSON.
-The old global-country coupling is replaced by explicit country and output-path arguments.
+prepare_records returns records containing a date, duration in hours and country.
+Analysis takes those records as arguments. cumulative_hours returns dates and running totals; duration_categories returns counts.
+compare_countries(records, country_a, country_b, start_year, end_year) returns both summaries and the winner.
+Presentation takes calculated results through plot_cumulative, report_categories and report_comparison.
+Application passes data through reading -> preparation -> analysis -> presentation. The other four modules do not import each other.
+Each module groups work with the same purpose. Calculations do not need files or graphs, and presentation does not read JSON.
+Passing the country and output filename as arguments removes the old dependence on global COUNTRY.
 
-Module dependencies (arrows mean "depends on"):
+Dependencies (arrows mean "depends on"):
 evacodev2.py -> eva/application.py
 eva/application.py -> eva/loading.py
 eva/application.py -> eva/preparation.py
@@ -37,26 +35,96 @@ eva/application.py -> eva/analysis.py
 eva/application.py -> eva/presentation.py
 
 ADR-001: Separate the application's main responsibilities
-
 1. Context: What problem are we addressing?
-Reading, preparation, calculations and output shared one script, making calculations hard to test separately.
-
+One script mixed reading, preparation, calculations and output, making calculations hard to test separately.
 2. Alternatives: What approaches were considered?
-Keep one script, split it into modules, or introduce service classes and a framework.
-
+Keep one script, split it into modules, or add classes and a framework.
 3. Decision: What approach was selected?
-Split the work into loading, preparation, analysis, presentation and application modules, keeping the original entry point.
-
+Split the work into loading, preparation, analysis, presentation and application modules. Keep the original entry point.
 4. Rationale: Why was this approach selected?
-The modules match the application's jobs. Simple functions are enough and no new runtime dependency is needed.
-
+The modules match the application's jobs. Simple functions are enough and no extra packages are needed.
 5. Consequences: What are the expected benefits, limitations and trade-offs?
-Responsibilities are easier to find and calculations can be tested independently. There are more files to navigate and the shared record format needs to stay consistent.
+The jobs are easier to find and test. There are more files to navigate, and the modules still need to agree on the record format.
 
 Activity 3: Restructure the Code
-
-The structure above is implemented. Existing calculations were moved into analysis and their output into presentation.
-The original file selection, country graph, all-country graph and category report remain available.
-Record skipping, sorting, zero-duration handling and category thresholds are preserved.
-The original report and plotted values are checked by tests against the captured baseline.
+The structure above is implemented. Calculations are in analysis and their output is in presentation.
+File selection, both cumulative graphs and the category report still work.
+Country input now ignores case and surrounding spaces, so usa and USA give the same data.
+Skipping incomplete records, sorting, zero-duration records and category thresholds are kept.
+Tests compare the original report and plotted values with the saved original results.
 The restructuring has its own commit: Refactor EVA application into separate modules.
+
+Activity 4: Implement FR
+The compare command takes Country A, Country B, start year and end year through prompts or arguments.
+It gives each country's EVA count, total hours and average hours, including both boundary years.
+It names the country with greater total duration, or reports a tie.
+A known country with no matching records gets zero count and hours, with its average unavailable.
+Unknown countries and invalid year ranges give an error message instead of crashing.
+Zero-duration EVAs are counted. The original command still works without extra arguments.
+summarise_country reuses the country filter and cumulative totals for both countries.
+Only analysis, presentation and application changed for this feature. Loading and preparation stayed the same.
+The feature commit contains comparison, tests and the completed hand-off. ADR-002 records the decision.
+
+Activity 5: Verify and Evaluate
+All 30 tests passed on 20 October 2026. These use known inputs and expected results:
+- Durations of 1.5, 2 and 0 hours give running totals of 1.5, 3.5 and 3.5.
+- Durations of 0, 3.99, 4, 6.99, 7 and 8 hours give two EVAs in each category.
+- For 2000-2002, the test data gives USA three EVAs, seven hours and average 7/3; Russia two EVAs, three hours and average 1.5. USA wins.
+- Tests cover inclusive years, single-year periods, empty results, ties, invalid ranges and unknown countries.
+- The original report and full plot data match for USA, Russia and an unknown country.
+
+For the supplied data over 1965-2013, USA has 217 EVAs, 1257.13 hours and a 5.79-hour average.
+Russia has 113 EVAs, 527.90 hours and a 4.67-hour average. USA has the greater total duration.
+The original command ran before and after restructuring and produced its report and a PNG.
+Graph tests ran without opening windows. The country graph was also checked manually with USA.
+
+1. How many modules needed modification to implement FR22?
+Three: analysis, presentation and application.
+2. Which modules depend on other modules?
+The entry point depends on application. Application depends on loading, preparation, analysis and presentation.
+3. Can calculations be tested without reading files or displaying results?
+Yes. Analysis takes records in memory and returns results. These tests do not need Matplotlib.
+4. Are responsibilities easier to identify?
+Yes. Each module has one main job, instead of everything sharing the original script.
+5. Has duplication been reduced?
+I reused filtering and cumulative calculations. One summary function handles both countries instead of copying the calculations.
+6. Did the restructuring introduce unnecessary complexity?
+It added more files and simple result types, but no framework or extra packages. I think this is reasonable for keeping the jobs separate.
+
+ADR-002: Keep comparison calculations separate from input and output
+1. Context: What problem are we addressing?
+Country comparison needs clear results and error handling while keeping the original functionality.
+2. Alternatives: What approaches were considered?
+Calculate inside the command handler, add a separate analysis function, or copy calculations for each country.
+3. Decision: What approach was selected?
+Use compare_countries and summarise_country in analysis. Application handles input and presentation displays results.
+4. Rationale: Why was this approach selected?
+Existing calculations can be reused and tested with known inputs. Loading and preparation need no changes.
+5. Consequences: What are the expected benefits, limitations and trade-offs?
+Comparison can be tested on its own and the old workflow stays available. Country names must exist in usable records in the selected file.
+
+Activity 6: Commit and Hand-Off
+The inherited history is kept. Restructuring and comparison have separate commits.
+This file contains the assessment, architecture, both ADRs, test results and hand-off instructions.
+The inherited README, dataset and earlier answer files are unchanged.
+
+Setup in PowerShell (Python 3.10 or newer):
+cd C:\Users\User\repos\EVAProject
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+Run the original application from the same folder:
+.\.venv\Scripts\python.exe evacodev2.py
+Enter eva-data.json, then USA or Russia. Close each graph window to continue.
+It saves cumulative_duration_COUNTRY.png and prints the category report.
+
+Run comparison:
+.\.venv\Scripts\python.exe evacodev2.py compare
+Enter eva-data.json, USA, Russia, 1965 and 2013. The results should match those above.
+
+Run the tests:
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+Success means 30 tests pass and the output ends with OK.
+test_analysis.py checks existing analysis and preparation; test_comparison.py checks comparison.
+test_application.py checks reports and input errors; test_legacy_regression.py checks original results.
+These files are in tests/. Keep tests/fixtures/inherited_baseline.json because the regression test needs it.
